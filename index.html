@@ -16,6 +16,7 @@
             --akrep-bg: #2B2D2B;
             --akrep-text: #E8E8E8;
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-serif: 'Georgia', serif;
             --card-bg: #FFFFFF;
             --shadow: 0 4px 15px rgba(0,0,0,0.05);
             --transition: all 0.4s ease;
@@ -23,17 +24,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-color);
-            color: var(--text-dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            transition: background-color 0.5s ease, color 0.5s ease;
-        }
-
+        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; transition: background-color 0.5s ease, color 0.5s ease; line-height: 1.6; }
         body.akrep-mode { background-color: var(--akrep-bg); color: var(--akrep-text); }
 
         header { text-align: center; padding: 2rem 1rem 1rem; position: relative; }
@@ -41,111 +32,49 @@
         body.akrep-mode h1 { color: #A0A0A0; }
         .subtitle { font-size: 0.9rem; color: var(--text-light); margin-top: 0.5rem; font-style: italic; }
 
-        .back-btn {
-            position: absolute;
-            left: 20px;
-            top: 30px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-            display: none;
-            transition: var(--transition);
-        }
+        .back-btn { position: absolute; left: 20px; top: 30px; background: none; border: none; font-size: 1.5rem; color: var(--primary); cursor: pointer; display: none; transition: var(--transition); }
         .back-btn:hover { transform: translateX(-5px); }
         body.akrep-mode .back-btn { color: var(--akrep-text); }
 
         main { flex: 1; width: 100%; max-width: 800px; margin: 0 auto; padding: 1rem; }
-
         .view { display: none; animation: fadeIn 0.5s ease forwards; }
         .view.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ANA SAYFA KARTLARI */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 2rem 1rem;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(0,0,0,0.02);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 160px;
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+        .card { background: var(--card-bg); border-radius: 16px; padding: 2rem 1rem; text-align: center; cursor: pointer; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); transition: var(--transition); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
-        .card.disabled { opacity: 0.6; cursor: not-allowed; border: 1px dashed #CCC; }
         .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
         .card-title { font-weight: 500; font-size: 1.1rem; }
 
-        button.action-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-top: 1rem;
-        }
+        button.action-btn { background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-size: 1rem; cursor: pointer; transition: var(--transition); margin-top: 1rem; width: 100%; max-width: 300px; }
         button.action-btn:hover { background-color: #8c9a76; }
         
-        textarea, input[type="text"], select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #E0E0E0;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            background: transparent;
-            transition: var(--transition);
-        }
-        textarea:focus, input[type="text"]:focus, select:focus { outline: none; border-color: var(--primary); background: rgba(255,255,255,0.5); }
+        textarea, input[type="text"], select { width: 100%; padding: 12px; border: 1px solid #E0E0E0; border-radius: 12px; font-family: inherit; font-size: 1rem; margin-bottom: 1rem; background: transparent; transition: var(--transition); }
+        textarea:focus, input[type="text"]:focus, select:focus { outline: none; border-color: var(--primary); background: rgba(255,255,255,0.8); }
         body.akrep-mode textarea { color: var(--akrep-text); border-color: #444; }
 
-        /* 1. GURUR ÇİÇEĞİ */
+        /* 1. GURUR ÇİÇEĞİ VE ARAÇLAR */
         .flower-layout { position: relative; width: 340px; height: 340px; margin: 20px auto 40px; }
-        .canvas-wrapper {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 140px; height: 140px; border-radius: 50%; background: var(--card-bg);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1); overflow: hidden;
-            border: 3px solid var(--secondary); z-index: 10;
-        }
+        .canvas-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; height: 140px; border-radius: 50%; background: #ffffff; box-shadow: inset 0 0 10px rgba(0,0,0,0.1); overflow: hidden; border: 3px solid var(--secondary); z-index: 10; }
         canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
         
-        .tools { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-        .tool-btn { background: var(--card-bg); color: var(--text-dark); border: 1px solid #ddd; padding: 6px 12px; border-radius: 15px; cursor: pointer; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .tools { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; background: rgba(255,255,255,0.6); padding: 15px; border-radius: 15px; }
+        .tool-group { display: flex; align-items: center; gap: 5px; border-right: 1px solid #ddd; padding-right: 10px; }
+        .tool-group:last-child { border-right: none; }
+        .tool-label { font-size: 0.75rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; display: block; text-align: center; margin-bottom: 4px; width: 100%; }
+        
+        .tool-btn { background: var(--card-bg); color: var(--text-dark); border: 1px solid #ddd; padding: 6px 10px; border-radius: 12px; cursor: pointer; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .tool-btn:hover { background: var(--secondary); border-color: var(--secondary); }
         .tool-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
         
-        /* Renk Paleti (Gradient Picker) */
-        .color-picker {
-            width: 32px; height: 32px; padding: 0; border: none; border-radius: 50%;
-            cursor: pointer; background: none; outline: none;
-        }
+        .color-picker { width: 32px; height: 32px; padding: 0; border: none; border-radius: 50%; cursor: pointer; background: none; outline: none; }
         .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
         .color-picker::-webkit-color-swatch { border: 2px solid white; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
         
-        .petal-input {
-            position: absolute; width: 100px; height: 100px;
-            background-color: rgba(233, 216, 166, 0.9); border: none; border-radius: 50% 50% 50% 10px;
-            padding: 15px; resize: none; text-align: center; font-size: 0.8rem;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 5; transition: all 0.3s;
-        }
-        .petal-input:focus { z-index: 15; transform: scale(1.1) !important; background-color: #fff; }
+        .petal-input { position: absolute; width: 100px; height: 100px; background-color: var(--secondary); border: none; border-radius: 50% 50% 50% 10px; padding: 15px; resize: none; text-align: center; font-size: 0.8rem; box-shadow: 0 4px 8px rgba(0,0,0,0.1); z-index: 5; transition: all 0.3s; }
+        .petal-input:focus { z-index: 15; transform: scale(1.1) !important; background-color: #fff !important; }
         
         .petal-1 { top: -10px; left: 120px; transform: rotate(45deg); }
         .petal-2 { top: 70px; right: -10px; transform: rotate(115deg); }
@@ -156,45 +85,38 @@
         .falling-petal { position: fixed; top: -50px; z-index: 9999; font-size: 1.5rem; user-select: none; pointer-events: none; animation: fall linear forwards; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
-        /* 2. ŞÜKRAN KAVANOZU */
+        /* 2. ŞÜKRAN KAVANOZU, MEKTUP, KASA VB. ESKİ STİLLER (Korunmuştur) */
         .jar-container { text-align: center; position: relative; padding: 1rem 0; }
         .glass-jar { width: 180px; height: 220px; margin: 20px auto; border: 6px solid rgba(163, 177, 138, 0.3); border-top: none; border-radius: 0 0 50px 50px; position: relative; background: rgba(255, 255, 255, 0.4); box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.8); overflow: hidden; }
         .jar-lid { width: 190px; height: 20px; background: var(--primary); border-radius: 10px; margin: 0 auto; position: relative; top: 25px; z-index: 2; }
         .jar-items-area { position: absolute; bottom: 0; left: 0; right: 0; top: 0; padding: 20px; }
         .saved-jar-item { position: absolute; font-size: 1.8rem; cursor: pointer; transition: transform 0.2s; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .saved-jar-item:hover { transform: scale(1.3); z-index: 10; }
-        
         .jar-options { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 1rem; }
         .opt-btn { font-size: 1.5rem; background: var(--card-bg); border: 1px solid #ddd; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .opt-btn.selected { border-color: var(--primary); box-shadow: 0 0 10px var(--primary-light); }
         .flying-item { position: fixed; font-size: 2rem; pointer-events: none; z-index: 100; opacity: 0; }
-
+        
         .jar-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.8); background: #fff; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; width: 80%; max-width: 300px; text-align: center; }
         .jar-modal.show { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s; }
         .modal-overlay.show { opacity: 1; visibility: visible; }
 
-        /* 3. KENDİME MEKTUP */
         .letter-wrap { position: relative; perspective: 1000px; margin-bottom: 30px; min-height: 400px; }
         .letter-paper { background-color: #FFFDF8; background-image: repeating-linear-gradient(transparent, transparent 29px, #E9D8A6 30px); padding: 30px; border-radius: 4px; box-shadow: var(--shadow); border: 1px solid #eee; position: relative; transform-origin: bottom center; transition: all 1s ease-in-out; z-index: 2; }
         .letter-paper select, .letter-paper input, .letter-paper textarea { border: none; background: transparent; border-bottom: 1px dashed #ccc; border-radius: 0; margin-bottom: 1.5rem; }
-        .letter-paper textarea { line-height: 30px; height: 200px; resize: vertical; border: none; font-family: 'Georgia', serif; font-size: 1.05rem; }
-        
+        .letter-paper textarea { line-height: 30px; height: 200px; resize: vertical; border: none; font-family: var(--font-serif); font-size: 1.05rem; }
         .envelope-visual { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 320px; height: 200px; background: #d4c5a9; border-radius: 8px; z-index: 1; opacity: 0; visibility: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .envelope-visual::after { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 100px solid #e3d5b9; }
-
         .mail-anim-step1 .letter-paper { transform: scale(0.6) translateY(50px) rotateX(40deg); opacity: 0.9; }
         .mail-anim-step2 .letter-paper { transform: scale(0.3) translateY(150px) rotateX(80deg); opacity: 0; }
         .mail-anim-step2 .envelope-visual { opacity: 1; visibility: visible; transition: opacity 0.5s 0.5s; }
         .mail-anim-step3 .envelope-visual { transform: translate(-50%, -250%) scale(0.5); opacity: 0; transition: all 1s ease-in; }
 
-        /* 4. AKREP ODASI */
-        .akrep-container { text-align: center; }
         .akrep-textarea { height: 300px; background: rgba(0,0,0,0.2); color: #ddd; border: 1px solid #555; resize: none; }
         .dissolve-anim { animation: dissolve 2s forwards; }
         @keyframes dissolve { 0% { opacity: 1; filter: blur(0); transform: scale(1); } 100% { opacity: 0; filter: blur(10px); transform: scale(1.1) translateY(-20px); } }
 
-        /* 5. DÜŞÜNCE KASASI & BALON */
         .safe-balloon-container { text-align: center; min-height: 400px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .safe-stage, .balloon-stage { display: flex; flex-direction: column; align-items: center; width: 100%; }
         .icon-huge { font-size: 5rem; margin: 1rem 0; }
@@ -205,37 +127,44 @@
         @keyframes floatUp { 0% { transform: translateY(50px); opacity: 1; } 90% { transform: translateY(-150px); opacity: 1; } 100% { transform: translateY(-150px) scale(0); opacity: 0; } }
         @keyframes lockSafe { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 0; } }
 
-        /* 6. KİŞİSEL ARŞİV VE ARŞİV ÇİÇEĞİ TASARIMI */
+        /* YENİ MODÜL 1: YAŞAMIN 12 ALANI (OLUMLAMALAR) */
+        .areas-grid { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        details { background: var(--card-bg); border: 1px solid #eee; border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; transition: var(--transition); }
+        summary { font-size: 1.1rem; font-weight: 500; padding: 15px 20px; cursor: pointer; list-style: none; display: flex; align-items: center; gap: 10px; color: var(--primary); }
+        summary::-webkit-details-marker { display: none; }
+        summary:hover { background: rgba(163, 177, 138, 0.05); }
+        .details-content { padding: 15px 20px 25px; border-top: 1px dashed #eee; background: #faf9f5; }
+        .details-desc { font-size: 0.85rem; color: var(--text-light); margin-bottom: 15px; font-style: italic; }
+        .aff-label { font-family: var(--font-serif); font-size: 0.95rem; color: var(--text-dark); margin-bottom: 5px; display: block; }
+
+        /* YENİ MODÜL 2: KENDİMİ TANIYORUM */
+        .discovery-intro { text-align: center; margin-bottom: 30px; padding: 20px; background: rgba(233, 216, 166, 0.3); border-radius: 12px; }
+        .discovery-intro h2 { font-weight: 400; color: var(--primary); margin-bottom: 10px; }
+        .discovery-intro p { font-size: 0.95rem; color: var(--text-dark); }
+        .q-box { margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 8px; border-left: 3px solid var(--primary); }
+        .q-text { font-family: var(--font-serif); font-size: 1.05rem; margin-bottom: 10px; color: #333; }
+        
+        /* 6. KİŞİSEL ARŞİV */
         .archive-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 2rem; }
         .archive-controls button { background-color: var(--card-bg); border: 1px solid var(--primary); color: var(--primary); border-radius: 8px; padding: 8px 15px; cursor: pointer; }
         .archive-item { background: var(--card-bg); border-left: 4px solid var(--primary); padding: 15px; margin-bottom: 25px; border-radius: 0 8px 8px 0; box-shadow: var(--shadow); }
         .archive-header { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-light); margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
         .archive-title { font-weight: bold; color: var(--text-dark); }
-        .archive-body { font-size: 0.95rem; white-space: pre-wrap; padding-top: 10px; }
+        .archive-body { font-size: 0.95rem; white-space: pre-wrap; padding-top: 10px; font-family: var(--font-serif); }
         .delete-btn { color: #d9534f; cursor: pointer; background: none; border: none; font-size: 0.9rem; }
         
         .archive-flower-wrapper { position: relative; width: 180px; height: 180px; margin: 20px auto; transform: scale(0.85); transform-origin: center; }
-        .archive-petal {
-            position: absolute; width: 70px; height: 70px; background-color: rgba(233, 216, 166, 0.9);
-            border-radius: 50% 50% 50% 10px; padding: 5px; text-align: center; font-size: 0.65rem;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1); z-index: 5; display: flex; align-items: center; justify-content: center;
-            overflow: hidden; word-wrap: break-word; color: #444; line-height: 1.2;
-        }
+        .archive-petal { position: absolute; width: 70px; height: 70px; border-radius: 50% 50% 50% 10px; padding: 5px; text-align: center; font-size: 0.65rem; box-shadow: 0 3px 6px rgba(0,0,0,0.1); z-index: 5; display: flex; align-items: center; justify-content: center; overflow: hidden; word-wrap: break-word; color: #444; line-height: 1.2; }
         .archive-petal span { display: block; width: 100%; transform: rotate(-45deg); }
         .ap-0 { top: 0px; left: 55px; transform: rotate(45deg); }
         .ap-1 { top: 35px; right: 0px; transform: rotate(115deg); }
         .ap-2 { bottom: 5px; right: 15px; transform: rotate(185deg); }
         .ap-3 { bottom: 5px; left: 15px; transform: rotate(255deg); }
         .ap-4 { top: 35px; left: 0px; transform: rotate(325deg); }
-        .archive-flower-center {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--secondary);
-            background: #fff; z-index: 10; overflow: hidden;
-        }
+        .archive-flower-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--secondary); background: #fff; z-index: 10; overflow: hidden; }
         .archive-flower-center img { width: 100%; height: 100%; object-fit: cover; }
         .archive-flower-list { list-style: none; padding: 0; text-align: center; margin-top: 10px; font-size: 0.85rem; color: var(--text-light); }
-        .archive-flower-list li { margin-bottom: 5px; }
-
+        
         @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
@@ -263,6 +192,14 @@
                     <div class="card-icon">💌</div>
                     <div class="card-title">Kendime Mektup</div>
                 </div>
+                <div class="card" onclick="navigate('affirmations')">
+                    <div class="card-icon">✨</div>
+                    <div class="card-title">Yaşamın 12 Alanı<br><small>(Olumlamalar)</small></div>
+                </div>
+                <div class="card" onclick="navigate('discovery')">
+                    <div class="card-icon">🌱</div>
+                    <div class="card-title">Kendimi Tanıyorum</div>
+                </div>
                 <div class="card" onclick="navigate('akrep')">
                     <div class="card-icon" style="filter: grayscale(100%);">🦂</div>
                     <div class="card-title">Akrep Odası</div>
@@ -281,16 +218,29 @@
         <!-- 1. GURUR ÇİÇEĞİ -->
         <section id="flower" class="view">
             <div style="text-align: center;">
-                <p style="color:var(--text-light); margin-bottom: 10px;">Bugün kendinle ilgili gurur duyduğun 5 şeyi yapraklara yaz. Ortayı çizebilir veya fotoğraf ekleyebilirsin.</p>
+                <p style="color:var(--text-light); margin-bottom: 10px;">Kendinle ilgili gurur duyduğun 5 şeyi yapraklara yaz. Ortayı çizebilir veya boyayabilirsin.</p>
                 
                 <div class="tools">
-                    <input type="color" class="color-picker" id="colorPicker" value="#A3B18A" onchange="changeColor(this.value)" title="Renk Seç">
-                    <button class="tool-btn" id="eraserBtn" onclick="toggleEraser()">🧼 Silgi</button>
-                    <button class="tool-btn" onclick="undo()">↩️ Geri</button>
-                    <button class="tool-btn" onclick="redo()">↪️ İleri</button>
-                    <button class="tool-btn" onclick="document.getElementById('flowerImageInput').click()">📷 Görsel</button>
-                    <input type="file" id="flowerImageInput" accept="image/*" style="display:none" onchange="uploadFlowerImage(event)">
-                    <button class="tool-btn" onclick="clearCanvas()" style="color:#d9534f;">🗑️ Temizle</button>
+                    <div class="tool-group">
+                        <span class="tool-label">Yapraklar</span>
+                        <input type="color" class="color-picker" id="petalColorPicker" value="#E9D8A6" onchange="changePetalColor(this.value)" title="Yaprak Rengi">
+                    </div>
+                    <div class="tool-group">
+                        <span class="tool-label">Göbek (Boya)</span>
+                        <input type="color" class="color-picker" id="brushColorPicker" value="#A3B18A" onchange="changeBrushColor(this.value)" title="Çizim Rengi">
+                        <button class="tool-btn active" id="btnBrush" onclick="setTool('brush')">🖌️ Fırça</button>
+                        <button class="tool-btn" id="btnSpray" onclick="setTool('spray')">💨 Püskürt</button>
+                        <button class="tool-btn" id="btnFill" onclick="setTool('fill')">🪣 Doldur</button>
+                        <button class="tool-btn" id="btnEraser" onclick="setTool('eraser')">🧼 Silgi</button>
+                    </div>
+                    <div class="tool-group">
+                        <span class="tool-label">İşlemler</span>
+                        <button class="tool-btn" onclick="undo()">↩️</button>
+                        <button class="tool-btn" onclick="redo()">↪️</button>
+                        <button class="tool-btn" onclick="document.getElementById('flowerImageInput').click()">📷 Ekle</button>
+                        <input type="file" id="flowerImageInput" accept="image/*" style="display:none" onchange="uploadFlowerImage(event)">
+                        <button class="tool-btn" onclick="clearCanvas()" style="color:#d9534f;">🗑️ Sil</button>
+                    </div>
                 </div>
 
                 <div class="flower-layout">
@@ -307,7 +257,26 @@
                     </div>
                 </div>
 
-                <button class="action-btn" onclick="saveFlower()">Çiçeğimi Tamamla & Arşive Ekle</button>
+                <center><button class="action-btn" onclick="saveFlower()">Çiçeğimi Tamamla & Arşive Ekle</button></center>
+            </div>
+        </section>
+
+        <!-- YENİ: YAŞAMIN 12 ALANI (OLUMLAMALAR) -->
+        <section id="affirmations" class="view">
+            <p style="text-align:center; color:var(--text-light); margin-bottom: 20px;">Hayatının farklı alanlarına niyetlerini, olumlamalarını ve sayı sekanslarını ekle.</p>
+            <div class="areas-grid" id="areasGrid">
+                <!-- Javascript ile doldurulacak -->
+            </div>
+        </section>
+
+        <!-- YENİ: KENDİMİ TANIYORUM -->
+        <section id="discovery" class="view">
+            <div class="discovery-intro">
+                <h2>KENDİNİ KEŞFETME ALANI</h2>
+                <p>Kendini tanımak, yalnızca nasıl biri olduğunu anlamak değil; neler hissettiğini, neye değer verdiğini, ne istediğini ve yaşamla nasıl ilişki kurduğunu keşfetmektir.<br><br>Burada doğru cevaplar yok. Kendine ait cevaplar var. İlgini çeken soruları yanıtlayabilir, kendi sorunu üretebilir veya bazılarını geçebilirsin. Verdiğin cevapları arşive kaydedebilirsin.</p>
+            </div>
+            <div class="areas-grid" id="discoveryGrid">
+                <!-- Javascript ile doldurulacak -->
             </div>
         </section>
 
@@ -315,12 +284,8 @@
         <section id="jar" class="view">
             <div class="jar-container">
                 <p style="color:var(--text-light); margin-bottom:5px;">Küçük mutlulukları biriktir. İçindekileri okumak için kavanoza dokun.</p>
-                
                 <div class="jar-lid"></div>
-                <div class="glass-jar">
-                    <div class="jar-items-area" id="jarItemsContainer"></div>
-                </div>
-                
+                <div class="glass-jar"><div class="jar-items-area" id="jarItemsContainer"></div></div>
                 <div class="jar-options" id="jarOptions">
                     <button class="opt-btn selected" onclick="selectJarItem(this, '⭐')">⭐</button>
                     <button class="opt-btn" onclick="selectJarItem(this, '🌸')">🌸</button>
@@ -331,14 +296,13 @@
                     <button class="opt-btn" onclick="selectJarItem(this, '🟣')">🟣</button>
                     <button class="opt-btn" onclick="selectJarItem(this, '🎲')" title="Rastgele">🎲</button>
                 </div>
-                
                 <input type="text" id="jarInput" placeholder="Bugün minnettarım..." maxlength="100">
-                <button class="action-btn" id="addToJarBtn" onclick="addToJar()">Kavanoza Ekle</button>
-                
+                <center><button class="action-btn" id="addToJarBtn" onclick="addToJar()">Kavanoza Ekle</button></center>
                 <div id="flyingItem" class="flying-item">⭐</div>
             </div>
         </section>
 
+        <!-- KAVANOZ MODALI -->
         <div class="modal-overlay" id="jarModalOverlay" onclick="closeJarModal()"></div>
         <div class="jar-modal" id="jarModal">
             <div style="font-size:2rem; margin-bottom:10px;" id="jarModalIcon">⭐</div>
@@ -358,9 +322,7 @@
                     </select>
                     <input type="text" id="letterTitle" placeholder="Mektubun başlığı...">
                     <textarea id="letterBody" placeholder="Sevgili kendim... (Satırlara dökül)"></textarea>
-                    <div style="text-align: right;">
-                        <button class="action-btn" onclick="saveLetter()">Mektubu Katla ve Postala</button>
-                    </div>
+                    <div style="text-align: right;"><button class="action-btn" onclick="saveLetter()">Mektubu Katla ve Postala</button></div>
                 </div>
             </div>
         </section>
@@ -370,7 +332,7 @@
             <div class="akrep-container">
                 <p style="color:var(--akrep-text); margin-bottom:15px; opacity:0.8;">Burası derinlerin. Filtresiz, sansürsüz içinden geçenleri yaz. Gönderdiğinde hepsi boşluğa karışacak.</p>
                 <textarea id="akrepText" class="akrep-textarea" placeholder="Şu an içimden geçenler..."></textarea>
-                <button class="action-btn" style="background:#555; width:100%;" onclick="releaseAkrep()">Karanlığa Bırak ve Arın</button>
+                <center><button class="action-btn" style="background:#555;" onclick="releaseAkrep()">Karanlığa Bırak ve Arın</button></center>
             </div>
         </section>
 
@@ -383,11 +345,7 @@
                     <textarea id="safeInput" style="height:100px; text-align:center;" placeholder="Örn: Başarısızım, yetersizim..."></textarea>
                     <button class="action-btn" onclick="lockSafe()">Düşünceyi Kasaya Kilitle</button>
                 </div>
-                <div id="balloonStage" class="balloon-stage" style="display:none;">
-                    <div class="balloon" id="theBalloon">
-                        🎈<div class="balloon-text" id="balloonTextLabel"></div>
-                    </div>
-                </div>
+                <div id="balloonStage" class="balloon-stage" style="display:none;"><div class="balloon" id="theBalloon">🎈<div class="balloon-text" id="balloonTextLabel"></div></div></div>
                 <div class="pop-text" id="popText">ÖĞRENİYORUM</div>
             </div>
         </section>
@@ -408,13 +366,10 @@
         function playChime() {
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain); gain.connect(ctx.destination);
-                osc.type = 'sine'; osc.frequency.setValueAtTime(800, ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.05, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                osc.connect(gain); gain.connect(ctx.destination); osc.type = 'sine'; 
+                osc.frequency.setValueAtTime(800, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.05, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
                 osc.start(); osc.stop(ctx.currentTime + 0.5);
             } catch(e) { }
         }
@@ -426,6 +381,8 @@
             'flower': { title: 'Gurur Çiçeği', sub: 'Kendini takdir et' },
             'jar': { title: 'Şükran Kavanozu', sub: 'Küçük mutlulukları biriktir' },
             'letter': { title: 'Kendime Mektup', sub: 'Zamanın ötesine seslen' },
+            'affirmations': { title: 'Yaşamın 12 Alanı', sub: 'Niyetler ve Olumlamalar' },
+            'discovery': { title: 'Kendimi Tanıyorum', sub: 'İçsel Keşif Alanı' },
             'akrep': { title: 'Akrep Odası', sub: 'Sansürsüz ve geçici' },
             'safe': { title: 'Düşünce Kasası', sub: 'Hükümleri serbest bırak' },
             'archive': { title: 'Kişisel Arşiv', sub: 'Geçmişteki sen' }
@@ -434,7 +391,6 @@
         function navigate(viewId) {
             views.forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-            
             document.getElementById('backBtn').style.display = viewId === 'home' ? 'none' : 'block';
             document.getElementById('mainTitle').innerText = titles[viewId].title;
             document.getElementById('mainSubtitle').innerText = titles[viewId].sub;
@@ -457,97 +413,91 @@
             localStorage.setItem('zazeura_data', JSON.stringify(zazeData));
         }
 
-        /* 1. GURUR ÇİÇEĞİ ÇİZİM, SİLGİ, GERİ/İLERİ AL */
+        /* 1. GURUR ÇİÇEĞİ ÇİZİM (Fırça, Püskürtme, Doldur, Silgi) */
         const canvas = document.getElementById('doodleCanvas');
         const ctx = canvas.getContext('2d');
-        let painting = false, brushColor = '#A3B18A', isErasing = false;
+        let painting = false, currentTool = 'brush', brushColor = '#A3B18A';
+        let currentPetalColor = '#E9D8A6';
         let undoStack = [], redoStack = [];
 
-        // Canvas başlangıç durumunu kaydet
-        saveCanvasState();
+        saveCanvasState(); // İlk beyaz hali kaydet
 
-        function saveCanvasState() {
-            undoStack.push(canvas.toDataURL());
-            redoStack = []; // Yeni çizim yapıldığında ileri almayı sıfırla
+        function setTool(toolName) {
+            currentTool = toolName;
+            ['btnBrush', 'btnSpray', 'btnFill', 'btnEraser'].forEach(id => document.getElementById(id).classList.remove('active'));
+            const capTool = toolName.charAt(0).toUpperCase() + toolName.slice(1);
+            document.getElementById('btn' + capTool).classList.add('active');
+            
+            if(toolName === 'eraser') ctx.globalCompositeOperation = 'destination-out';
+            else ctx.globalCompositeOperation = 'source-over';
         }
 
+        function changeBrushColor(color) { 
+            brushColor = color; 
+            if(currentTool === 'eraser') setTool('brush'); // Silgideyken renk seçerse fırçaya dön
+        }
+        function changePetalColor(color) {
+            currentPetalColor = color;
+            document.querySelectorAll('.petal-input').forEach(p => p.style.backgroundColor = color);
+        }
+
+        function saveCanvasState() { undoStack.push(canvas.toDataURL()); redoStack = []; }
         function restoreCanvas(dataUrl) {
-            const img = new Image();
-            img.src = dataUrl;
+            const img = new Image(); img.src = dataUrl;
             img.onload = () => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.globalCompositeOperation = 'source-over'; // Resim çizerken normale dön
+                const prevOp = ctx.globalCompositeOperation;
+                ctx.globalCompositeOperation = 'source-over';
                 ctx.drawImage(img, 0, 0);
-                if(isErasing) ctx.globalCompositeOperation = 'destination-out';
+                ctx.globalCompositeOperation = prevOp;
             };
         }
+        function undo() { if (undoStack.length > 1) { redoStack.push(undoStack.pop()); restoreCanvas(undoStack[undoStack.length - 1]); } }
+        function redo() { if (redoStack.length > 0) { const state = redoStack.pop(); undoStack.push(state); restoreCanvas(state); } }
 
-        function undo() {
-            if (undoStack.length > 1) {
-                redoStack.push(undoStack.pop());
-                restoreCanvas(undoStack[undoStack.length - 1]);
+        function startPosition(e) { 
+            if(currentTool === 'fill') {
+                ctx.fillStyle = brushColor;
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.fillRect(0,0, canvas.width, canvas.height);
+                saveCanvasState();
+                return;
+            }
+            painting = true; draw(e); 
+        }
+        function endPosition() { if(!painting) return; painting = false; ctx.beginPath(); saveCanvasState(); }
+        
+        function sprayDot(x, y) {
+            ctx.fillStyle = brushColor;
+            for(let i=0; i<15; i++) {
+                let offsetX = (Math.random() - 0.5) * 20;
+                let offsetY = (Math.random() - 0.5) * 20;
+                ctx.fillRect(x + offsetX, y + offsetY, 2, 2);
             }
         }
 
-        function redo() {
-            if (redoStack.length > 0) {
-                const state = redoStack.pop();
-                undoStack.push(state);
-                restoreCanvas(state);
-            }
-        }
-
-        function startPosition(e) { painting = true; draw(e); }
-        function endPosition() { 
-            if(!painting) return;
-            painting = false; 
-            ctx.beginPath(); 
-            saveCanvasState(); 
-        }
         function draw(e) {
             if (!painting) return;
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
-            let clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            let x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+            let y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
             
-            ctx.lineWidth = isErasing ? 12 : 3; 
-            ctx.lineCap = 'round'; 
-            ctx.strokeStyle = isErasing ? 'rgba(0,0,0,1)' : brushColor;
-            
-            ctx.lineTo(clientX - rect.left, clientY - rect.top); 
-            ctx.stroke();
-            ctx.beginPath(); 
-            ctx.moveTo(clientX - rect.left, clientY - rect.top);
+            if(currentTool === 'spray') {
+                sprayDot(x, y);
+            } else {
+                ctx.lineWidth = currentTool === 'eraser' ? 12 : 3; 
+                ctx.lineCap = 'round'; 
+                ctx.strokeStyle = currentTool === 'eraser' ? 'rgba(0,0,0,1)' : brushColor;
+                ctx.lineTo(x, y); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(x, y);
+            }
         }
         
         canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mousemove', draw);
         canvas.addEventListener('touchstart', startPosition, {passive:false}); canvas.addEventListener('touchend', endPosition); canvas.addEventListener('touchmove', draw, {passive:false});
-        
-        function changeColor(color) { 
-            brushColor = color; 
-            isErasing = false; 
-            document.getElementById('eraserBtn').classList.remove('active');
-            ctx.globalCompositeOperation = 'source-over'; 
-        }
 
-        function toggleEraser() {
-            isErasing = !isErasing;
-            const btn = document.getElementById('eraserBtn');
-            if(isErasing) {
-                btn.classList.add('active');
-                ctx.globalCompositeOperation = 'destination-out';
-            } else {
-                btn.classList.remove('active');
-                ctx.globalCompositeOperation = 'source-over';
-            }
-        }
-
-        function clearCanvas() { 
-            ctx.clearRect(0, 0, canvas.width, canvas.height); 
-            saveCanvasState();
-        }
-
+        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); saveCanvasState(); }
         function uploadFlowerImage(event) {
             const file = event.target.files[0];
             if(file) {
@@ -555,14 +505,10 @@
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
-                        clearCanvas();
-                        ctx.globalCompositeOperation = 'source-over';
-                        let hRatio = canvas.width / img.width;
-                        let vRatio = canvas.height / img.height;
-                        let ratio  = Math.max ( hRatio, vRatio );
-                        let centerShift_x = ( canvas.width - img.width*ratio ) / 2;
-                        let centerShift_y = ( canvas.height - img.height*ratio ) / 2;  
-                        ctx.drawImage(img, 0,0, img.width, img.height, centerShift_x, centerShift_y, img.width*ratio, img.height*ratio);
+                        clearCanvas(); ctx.globalCompositeOperation = 'source-over';
+                        let hRatio = canvas.width / img.width; let vRatio = canvas.height / img.height; let ratio = Math.max(hRatio, vRatio);
+                        let cx = (canvas.width - img.width*ratio)/2; let cy = (canvas.height - img.height*ratio)/2;  
+                        ctx.drawImage(img, 0,0, img.width, img.height, cx, cy, img.width*ratio, img.height*ratio);
                         saveCanvasState();
                     }
                     img.src = e.target.result;
@@ -571,247 +517,300 @@
             }
         }
 
-        function startPetalRain() {
+        function saveFlower() {
+            const inputs = document.querySelectorAll('.petal-input'); let petals = [];
+            inputs.forEach(inp => { if(inp.value.trim() !== '') petals.push(inp.value.trim()); });
+            if(petals.length === 0) { alert("Lütfen en az bir yaprağı doldur."); return; }
+            saveData('flower', { petals: petals, doodle: canvas.toDataURL(), petalColor: currentPetalColor });
+            
             const emojis = ['🌸', '✨', '🌻', '🍃'];
             for(let i=0; i<30; i++) {
                 setTimeout(() => {
-                    const petal = document.createElement('div');
-                    petal.className = 'falling-petal';
-                    petal.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                    petal.style.left = Math.random() * 100 + 'vw';
-                    petal.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                    document.body.appendChild(petal);
-                    setTimeout(() => petal.remove(), 4000);
+                    const p = document.createElement('div'); p.className = 'falling-petal'; p.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                    p.style.left = Math.random() * 100 + 'vw'; p.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(p); setTimeout(() => p.remove(), 4000);
                 }, i * 100);
             }
-        }
-
-        function saveFlower() {
-            const inputs = document.querySelectorAll('.petal-input');
-            let petals = [];
-            inputs.forEach(inp => { if(inp.value.trim() !== '') petals.push(inp.value.trim()); });
-            if(petals.length === 0) { alert("Lütfen en az bir yaprağı doldur."); return; }
-            
-            saveData('flower', { petals: petals, doodle: canvas.toDataURL() });
-            
-            startPetalRain();
             playChime();
-            
-            setTimeout(() => {
-                inputs.forEach(inp => inp.value = ''); clearCanvas(); navigate('home');
-            }, 3000);
+            setTimeout(() => { inputs.forEach(inp => inp.value = ''); clearCanvas(); navigate('home'); }, 3000);
         }
 
-        /* 2. ŞÜKRAN KAVANOZU */
+        /* ------------------------------------------------------------- */
+        /* YENİ VERİ YAPILARI: YAŞAMIN 12 ALANI VE KENDİMİ TANIYORUM   */
+        /* ------------------------------------------------------------- */
+
+        const lifeAreas = [
+            { id: 1, title: 'Aşk', desc: 'Romantik ilişki, sevgi, yakınlık ve birliktelik.' },
+            { id: 2, title: 'Aile', desc: 'Aile bağları, huzur, birlik ve aile yaşamı.' },
+            { id: 3, title: 'Arkadaşlık', desc: 'Dostluklar, sosyal çevre ve karşılıklı bağlar.' },
+            { id: 4, title: 'Sağlık', desc: 'Beden, enerji, sağlık ve iyi oluş.' },
+            { id: 5, title: 'İş ve Kariyer', desc: 'Meslek, çalışma hayatı, başarı ve üretkenlik.' },
+            { id: 6, title: 'Maddi Yaşam', desc: 'Para, bolluk, finansal güven ve özgürlük.' },
+            { id: 7, title: 'Öğrenme ve Gelişim', desc: 'Bilgi, beceriler, keşif ve kişisel gelişim.' },
+            { id: 8, title: 'Keyif ve Eğlence', desc: 'Hobiler, seyahat, oyun ve yaşamın tadı.' },
+            { id: 9, title: 'Ev ve Yaşam Alanı', desc: 'Ev, konfor, çevre ve yaşadığın mekân.' },
+            { id: 10, title: 'İçsel Yaşam', desc: 'İç huzur, öz güven, sezgiler ve kendinle bağın.' },
+            { id: 11, title: 'Katkı ve Toplumsal Yaşam', desc: 'Yardım, paylaşım, topluma katkı ve fayda üretmek.' },
+            { id: 12, title: 'Hayaller ve Yaşam Vizyonu', desc: 'Gelecek tasarımı, büyük hayaller ve yaşam yönü.' }
+        ];
+
+        const discoveryTopics = [
+            {
+                title: "1. İçimde Neler Oluyor?",
+                desc: "Duygularımı, düşüncelerimi ve iç dünyamdaki hareketliliği fark etmek.",
+                qs: [
+                    "Bugün hissettiğim duygulardan hangisi, aslında fark edilmek isteyen bir ihtiyacımı anlatıyor olabilir?",
+                    "Zihnim son zamanlarda en çok hangi konuya dönüp duruyor?",
+                    "Bir duygu yaşadığımda, onun etkisi geçtikten sonra geriye bende ne kalıyor?",
+                    "Bugün iç dünyamda fark ettiğim ama henüz adını koyamadığım bir şey var mı?"
+                ], customBase: "İçimde olup bitenleri ... nasıl daha iyi anlayabilirim?"
+            },
+            {
+                title: "2. Benim İçin Ne Değerli?",
+                desc: "Önceliklerimi, değerlerimi ve yaşamımda yer vermek istediklerimi keşfetmek.",
+                qs: [
+                    "Bir günümü gerçekten değerli hissettiren şey ne?",
+                    "Başkalarının beklentilerinden bağımsız düşündüğümde, benim için vazgeçilmez olan ne?",
+                    "Hangi konuda küçük bir seçim yapmak bile kendime sadık hissettiriyor?",
+                    "Hayatımda daha fazla yer almasını istediğim ama günlük telaşta geri plana düşen şey ne?"
+                ], customBase: "Hayatımda ... için nasıl daha fazla alan açabilirim?"
+            },
+            {
+                title: "3. Ben Ne İstiyorum?",
+                desc: "İsteklerimi, arzularımı ve hayallerimi başkalarının beklentilerinden ayırabilmek.",
+                qs: [
+                    "Şu sıralar içimde en çok hangi deneyimi yaşama isteği var?",
+                    "Bir şeyi istememin altında nasıl bir his veya ihtiyaç bulunuyor olabilir?",
+                    "Kimseye açıklamak zorunda olmasaydım, hayatımda neyi farklı seçerdim?",
+                    "Henüz nasıl gerçekleşeceğini bilmediğim ama düşüncesi bile beni heyecanlandıran ne var?"
+                ], customBase: "Gerçekten istediğim ... nasıl keşfedebilirim?"
+            },
+            {
+                title: "4. Kendimle İlişkim",
+                desc: "Kendime nasıl davrandığımı, kendimi nasıl değerlendirdiğimi ve kendime ne kadar alan tanıdığımı görmek.",
+                qs: [
+                    "Kendime, sevdiğim birine davrandığım kadar anlayışlı davranıyor muyum?",
+                    "Bir şey istediğim gibi gitmediğinde kendime ilk söylediğim şey ne oluyor?",
+                    "Kendimde takdir ettiğim ama pek dile getirmediğim bir özellik ne?",
+                    "Kendime hangi konuda henüz öğrenme ve gelişme payı tanımıyorum?"
+                ], customBase: "Kendime ... konusunda nasıl daha farklı yaklaşabilirim?"
+            },
+            {
+                title: "5. Hayatla İlişkim",
+                desc: "Belirsizlik, değişim, beklentiler ve seçimler karşısındaki yaklaşımımı keşfetmek.",
+                qs: [
+                    "Her şeyin kontrolümde olmadığı bir durumda kendime nasıl bir hareket alanı tanıyorum?",
+                    "Bir şeyin istediğim zamanda gerçekleşmemesi, onunla ilgili düşüncelerimi nasıl etkiliyor?",
+                    "Geçmişte beni zorlayan ama bugün daha farklı karşılayabildiğim bir durum var mı?",
+                    "Geleceği düşünürken bugünün hangi güzelliklerini gözden kaçırabiliyorum?"
+                ], customBase: "Hayatımda ... karşısında nasıl daha özgür seçimler yapabilirim?"
+            },
+            {
+                title: "6. Beni Ben Yapanlar",
+                desc: "Özgün yönlerimi, kişisel anlamlarımı ve henüz keşfetmediğim taraflarımı tanımak.",
+                qs: [
+                    "Başkalarının pek fark etmediği ama benim kendimde sevdiğim bir özellik ne?",
+                    "Hangi uğraşın içinde kendimi daha doğal ve özgür hissediyorum?",
+                    "Çocukluğumdan bugüne değişmeden taşıdığım küçük bir merak veya alışkanlık var mı?",
+                    "Kendime ait olduğunu hissettiğim, başkasına benzemek zorunda olmayan bir hayalim ne?"
+                ], customBase: "Bende bulunan ... yönünü nasıl daha fazla keşfedebilirim?"
+            },
+            {
+                title: "7. Bedenimi Gözlüyorum 🌿",
+                desc: "Bedenimizin işleyişini, ihtiyaçlarını ve günlük sinyallerini fark etmek.",
+                qs: [
+                    "Son zamanlarda bedenimde fark ettiğim ama üzerinde pek durmadığım bir değişiklik var mı?",
+                    "Gün içinde hangi zamanlarda kendimi fiziksel olarak daha enerjik veya daha yorgun hissediyorum?",
+                    "Bedenimin rahat ettiği, iyi hissettiği ve doğal olarak sürdürmek istediği bir alışkanlık ne?",
+                    "Günlük yaşamımda bedenimin ihtiyaçlarını fark etmeme rağmen ertelediğim küçük bir şey var mı?"
+                ], customBase: "Bedenimin ... ihtiyacını nasıl daha iyi anlayabilirim?"
+            }
+        ];
+
+        // Yaşamın 12 Alanı HTML Üretimi
+        const areasGrid = document.getElementById('areasGrid');
+        lifeAreas.forEach(area => {
+            const html = `
+                <details>
+                    <summary>✨ ${area.id}. ${area.title}</summary>
+                    <div class="details-content">
+                        <p class="details-desc">${area.desc}</p>
+                        <span class="aff-label">Olumlamam:</span>
+                        <textarea id="aff_text_${area.id}" rows="3" placeholder="Örn: Hayatıma sevgiyle kabul ediyorum..."></textarea>
+                        <span class="aff-label">Sayı Sekansı:</span>
+                        <input type="text" id="aff_num_${area.id}" placeholder="Örn: 777, 520, 8888...">
+                        <center><button class="action-btn" onclick="saveAffirmation(${area.id}, '${area.title}')">Arşive Ekle</button></center>
+                    </div>
+                </details>
+            `;
+            areasGrid.innerHTML += html;
+        });
+
+        function saveAffirmation(id, title) {
+            const txt = document.getElementById(`aff_text_${id}`).value.trim();
+            const num = document.getElementById(`aff_num_${id}`).value.trim();
+            if(!txt && !num) { alert('Lütfen olumlama veya sayı sekansı yaz.'); return; }
+            saveData('affirmation', { title: title, text: txt, number: num });
+            document.getElementById(`aff_text_${id}`).value = '';
+            document.getElementById(`aff_num_${id}`).value = '';
+            alert(`${title} alanındaki niyetin arşive kaydedildi! 🌻`);
+        }
+
+        // Kendimi Tanıyorum HTML Üretimi
+        const discGrid = document.getElementById('discoveryGrid');
+        discoveryTopics.forEach((topic, idx) => {
+            let qsHTML = '';
+            topic.qs.forEach((q, qIdx) => {
+                qsHTML += `
+                    <div class="q-box">
+                        <div class="q-text">${qIdx+1}. ${q}</div>
+                        <textarea id="disc_${idx}_${qIdx}" rows="2" placeholder="Cevabın..."></textarea>
+                    </div>
+                `;
+            });
+            // Kendi sorusu
+            qsHTML += `
+                <div class="q-box" style="border-left-color: var(--secondary);">
+                    <div class="q-text"><em>Kendi Sorun:</em> <input type="text" id="disc_${idx}_custQ" placeholder="${topic.customBase}" style="margin-top:5px; border-bottom:1px solid #ccc; border-radius:0;"></div>
+                    <textarea id="disc_${idx}_custA" rows="2" placeholder="Cevabın..."></textarea>
+                </div>
+                <center><button class="action-btn" onclick="saveDiscovery(${idx})">Cevaplarımı Kaydet</button></center>
+            `;
+
+            const html = `
+                <details>
+                    <summary>🌱 ${topic.title}</summary>
+                    <div class="details-content">
+                        <p class="details-desc">${topic.desc}</p>
+                        ${qsHTML}
+                    </div>
+                </details>
+            `;
+            discGrid.innerHTML += html;
+        });
+
+        function saveDiscovery(topicIdx) {
+            const topic = discoveryTopics[topicIdx];
+            let answers = [];
+            // Sabit soruları kontrol et
+            topic.qs.forEach((q, qIdx) => {
+                const ans = document.getElementById(`disc_${topicIdx}_${qIdx}`).value.trim();
+                if(ans) answers.push({ q: q, a: ans });
+            });
+            // Özel soruyu kontrol et
+            const custQ = document.getElementById(`disc_${topicIdx}_custQ`).value.trim();
+            const custA = document.getElementById(`disc_${topicIdx}_custA`).value.trim();
+            if(custQ && custA) answers.push({ q: custQ, a: custA });
+
+            if(answers.length === 0) { alert('Kaydetmek için en az bir soruya cevap vermelisin.'); return; }
+
+            saveData('discovery', { title: topic.title, answers: answers });
+            
+            // Alanları temizle
+            topic.qs.forEach((_, qIdx) => document.getElementById(`disc_${topicIdx}_${qIdx}`).value = '');
+            document.getElementById(`disc_${topicIdx}_custQ`).value = '';
+            document.getElementById(`disc_${topicIdx}_custA`).value = '';
+            
+            alert(`Cevapların başarıyla arşivlendi. Kendine ayırdığın bu zaman için teşekkürler. 🌿`);
+        }
+
+        /* ------------------------------------------------------------- */
+        /* DİĞER MODÜLLER VE ARŞİV (Korundu ve Genişletildi)           */
+        /* ------------------------------------------------------------- */
+
         let selectedJarItem = '⭐';
         function selectJarItem(btn, item) {
-            document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-            if(item === '🎲') {
-                const arr = ['⭐', '🌸', '🔴', '🔵', '🟢', '🟡', '🟣'];
-                selectedJarItem = arr[Math.floor(Math.random() * arr.length)];
-            } else { selectedJarItem = item; }
+            document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected');
+            if(item === '🎲') { const arr = ['⭐', '🌸', '🔴', '🔵', '🟢', '🟡', '🟣']; selectedJarItem = arr[Math.floor(Math.random() * arr.length)]; } else { selectedJarItem = item; }
         }
-
         function renderJarVisuals() {
-            const container = document.getElementById('jarItemsContainer');
-            container.innerHTML = '';
+            const container = document.getElementById('jarItemsContainer'); container.innerHTML = '';
             const jarData = zazeData.filter(i => i.type === 'jar');
-            
             jarData.forEach(item => {
-                const el = document.createElement('div');
-                el.className = 'saved-jar-item';
-                el.innerText = item.content.icon;
-                el.style.left = Math.floor(Math.random() * 70) + 10 + '%';
-                el.style.bottom = Math.floor(Math.random() * 70) + 5 + '%';
-                el.style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
-                
-                el.onclick = () => openJarModal(item.content.icon, item.content.text);
-                container.appendChild(el);
+                const el = document.createElement('div'); el.className = 'saved-jar-item'; el.innerText = item.content.icon;
+                el.style.left = Math.floor(Math.random() * 70) + 10 + '%'; el.style.bottom = Math.floor(Math.random() * 70) + 5 + '%'; el.style.transform = `rotate(${Math.floor(Math.random() * 360)}deg)`;
+                el.onclick = () => openJarModal(item.content.icon, item.content.text); container.appendChild(el);
             });
         }
-
-        function openJarModal(icon, text) {
-            document.getElementById('jarModalIcon').innerText = icon;
-            document.getElementById('jarModalText').innerText = text;
-            document.getElementById('jarModalOverlay').classList.add('show');
-            document.getElementById('jarModal').classList.add('show');
-        }
-        function closeJarModal() {
-            document.getElementById('jarModalOverlay').classList.remove('show');
-            document.getElementById('jarModal').classList.remove('show');
-        }
-
+        function openJarModal(icon, text) { document.getElementById('jarModalIcon').innerText = icon; document.getElementById('jarModalText').innerText = text; document.getElementById('jarModalOverlay').classList.add('show'); document.getElementById('jarModal').classList.add('show'); }
+        function closeJarModal() { document.getElementById('jarModalOverlay').classList.remove('show'); document.getElementById('jarModal').classList.remove('show'); }
         function addToJar() {
-            const input = document.getElementById('jarInput');
-            const text = input.value.trim();
-            if(!text) return;
-
-            const flying = document.getElementById('flyingItem');
-            const btn = document.getElementById('addToJarBtn');
-            const btnRect = btn.getBoundingClientRect();
-            const jarArea = document.querySelector('.glass-jar').getBoundingClientRect();
-            
-            flying.innerText = selectedJarItem;
-            flying.style.transition = 'none';
-            flying.style.opacity = '1';
-            flying.style.top = btnRect.top + 'px';
-            flying.style.left = btnRect.left + (btnRect.width/2) + 'px';
-            flying.style.transform = 'translate(-50%, -50%) scale(1)';
-
-            setTimeout(() => {
-                flying.style.transition = 'all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)';
-                flying.style.top = (jarArea.top + jarArea.height / 2) + 'px';
-                flying.style.left = (jarArea.left + jarArea.width / 2) + 'px';
-                flying.style.transform = 'translate(-50%, -50%) scale(0.5)';
-                playChime();
-            }, 50);
-
-            setTimeout(() => {
-                flying.style.opacity = '0';
-                saveData('jar', { text: text, icon: selectedJarItem });
-                input.value = '';
-                renderJarVisuals();
-            }, 850);
+            const input = document.getElementById('jarInput'); const text = input.value.trim(); if(!text) return;
+            const flying = document.getElementById('flyingItem'); const btn = document.getElementById('addToJarBtn'); const btnRect = btn.getBoundingClientRect(); const jarArea = document.querySelector('.glass-jar').getBoundingClientRect();
+            flying.innerText = selectedJarItem; flying.style.transition = 'none'; flying.style.opacity = '1'; flying.style.top = btnRect.top + 'px'; flying.style.left = btnRect.left + (btnRect.width/2) + 'px'; flying.style.transform = 'translate(-50%, -50%) scale(1)';
+            setTimeout(() => { flying.style.transition = 'all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)'; flying.style.top = (jarArea.top + jarArea.height / 2) + 'px'; flying.style.left = (jarArea.left + jarArea.width / 2) + 'px'; flying.style.transform = 'translate(-50%, -50%) scale(0.5)'; playChime(); }, 50);
+            setTimeout(() => { flying.style.opacity = '0'; saveData('jar', { text: text, icon: selectedJarItem }); input.value = ''; renderJarVisuals(); }, 850);
         }
 
-        /* 3. KENDİME MEKTUP */
         function saveLetter() {
-            const to = document.getElementById('letterTo').value;
-            const title = document.getElementById('letterTitle').value.trim();
-            const body = document.getElementById('letterBody').value.trim();
+            const to = document.getElementById('letterTo').value; const title = document.getElementById('letterTitle').value.trim(); const body = document.getElementById('letterBody').value.trim();
             if(!body) { alert("Mektup içeriği boş olamaz."); return; }
-
             const wrap = document.getElementById('letterWrap');
-            
             wrap.classList.add('mail-anim-step1');
-            setTimeout(() => {
-                wrap.classList.remove('mail-anim-step1');
-                wrap.classList.add('mail-anim-step2');
-                setTimeout(() => {
-                    wrap.classList.remove('mail-anim-step2');
-                    wrap.classList.add('mail-anim-step3');
-                    setTimeout(() => {
-                        saveData('letter', { to: to, title: title, body: body });
-                        wrap.classList.remove('mail-anim-step3');
-                        document.getElementById('letterTitle').value = '';
-                        document.getElementById('letterBody').value = '';
-                        alert("Harika bir mektup 💌");
-                        navigate('home');
-                    }, 1000);
+            setTimeout(() => { wrap.classList.remove('mail-anim-step1'); wrap.classList.add('mail-anim-step2');
+                setTimeout(() => { wrap.classList.remove('mail-anim-step2'); wrap.classList.add('mail-anim-step3');
+                    setTimeout(() => { saveData('letter', { to: to, title: title, body: body }); wrap.classList.remove('mail-anim-step3'); document.getElementById('letterTitle').value = ''; document.getElementById('letterBody').value = ''; alert("Harika bir mektup 💌"); navigate('home'); }, 1000);
                 }, 1000);
             }, 1000);
         }
 
-        /* 4. AKREP ODASI */
-        function releaseAkrep() {
-            const textEl = document.getElementById('akrepText');
-            if(!textEl.value.trim()) return;
-            textEl.classList.add('dissolve-anim');
-            setTimeout(() => { textEl.value = ''; textEl.classList.remove('dissolve-anim'); }, 2000);
-        }
+        function releaseAkrep() { const textEl = document.getElementById('akrepText'); if(!textEl.value.trim()) return; textEl.classList.add('dissolve-anim'); setTimeout(() => { textEl.value = ''; textEl.classList.remove('dissolve-anim'); }, 2000); }
 
-        /* 5. DÜŞÜNCE KASASI & BALON */
         function lockSafe() {
-            const input = document.getElementById('safeInput');
-            const text = input.value.trim();
-            if(!text) return;
-            const safeStage = document.getElementById('safeStage');
-            const safeIcon = document.getElementById('safeIcon');
-            const balloonStage = document.getElementById('balloonStage');
-            const popText = document.getElementById('popText');
-            const balloon = document.getElementById('theBalloon');
-
+            const input = document.getElementById('safeInput'); const text = input.value.trim(); if(!text) return;
+            const safeStage = document.getElementById('safeStage'); const safeIcon = document.getElementById('safeIcon'); const balloonStage = document.getElementById('balloonStage'); const popText = document.getElementById('popText'); const balloon = document.getElementById('theBalloon');
             safeIcon.style.animation = 'lockSafe 1s forwards';
             setTimeout(() => {
-                safeStage.style.display = 'none';
-                safeIcon.style.animation = '';
-                balloonStage.style.display = 'flex';
-                document.getElementById('balloonTextLabel').innerText = text;
-                balloon.style.animation = 'none'; void balloon.offsetWidth;
-                balloon.style.animation = 'floatUp 3s ease-in forwards';
-
-                setTimeout(() => {
-                    popText.classList.add('show');
-                    setTimeout(() => {
-                        popText.classList.remove('show');
-                        balloonStage.style.display = 'none';
-                        safeStage.style.display = 'flex';
-                        input.value = '';
-                    }, 3000);
-                }, 2800);
+                safeStage.style.display = 'none'; safeIcon.style.animation = ''; balloonStage.style.display = 'flex'; document.getElementById('balloonTextLabel').innerText = text; balloon.style.animation = 'none'; void balloon.offsetWidth; balloon.style.animation = 'floatUp 3s ease-in forwards';
+                setTimeout(() => { popText.classList.add('show'); setTimeout(() => { popText.classList.remove('show'); balloonStage.style.display = 'none'; safeStage.style.display = 'flex'; input.value = ''; }, 3000); }, 2800);
             }, 1000);
         }
 
-        /* 6. KİŞİSEL ARŞİV */
         function renderArchive() {
-            const list = document.getElementById('archiveList');
-            list.innerHTML = '';
-            if(zazeData.length === 0) {
-                list.innerHTML = '<p style="text-align:center; color:#999;">Arşivin şu an boş. Kendine dair izler bırakmaya başla.</p>'; return;
-            }
+            const list = document.getElementById('archiveList'); list.innerHTML = '';
+            if(zazeData.length === 0) { list.innerHTML = '<p style="text-align:center; color:#999;">Arşivin şu an boş. Kendine dair izler bırakmaya başla.</p>'; return; }
             zazeData.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'archive-item';
+                const div = document.createElement('div'); div.className = 'archive-item';
                 let icon = '', contentHTML = '';
 
                 if(item.type === 'flower') {
                     icon = '🌸 Gurur Çiçeği';
-                    
-                    // Görsel Çiçek Şekli
+                    const pColor = item.content.petalColor || '#E9D8A6'; // Eski kayıtlarda renk yoksa default sarı
                     let petalsHTML = '';
-                    item.content.petals.forEach((p, index) => {
-                        if(index < 5) petalsHTML += `<div class="archive-petal ap-${index}"><span>${p}</span></div>`;
-                    });
-                    
+                    item.content.petals.forEach((p, index) => { if(index < 5) petalsHTML += `<div class="archive-petal ap-${index}" style="background-color: ${pColor};"><span>${p}</span></div>`; });
                     let centerHTML = item.content.doodle ? `<div class="archive-flower-center"><img src="${item.content.doodle}"></div>` : '<div class="archive-flower-center"></div>';
-                    
-                    contentHTML = `
-                        <div class="archive-flower-wrapper">
-                            ${petalsHTML}
-                            ${centerHTML}
-                        </div>
-                        <ul class="archive-flower-list">
-                            ${item.content.petals.map(p => `<li>• ${p}</li>`).join('')}
-                        </ul>
-                    `;
+                    contentHTML = `<div class="archive-flower-wrapper">${petalsHTML}${centerHTML}</div><ul class="archive-flower-list">${item.content.petals.map(p => `<li>• ${p}</li>`).join('')}</ul>`;
                 } 
                 else if(item.type === 'jar') { icon = `${item.content.icon} Şükran Kavanozu`; contentHTML = `<p>${item.content.text}</p>`; }
                 else if(item.type === 'letter') { icon = `💌 ${item.content.to}`; contentHTML = `<strong>${item.content.title}</strong><br><p style="margin-top:5px; font-style:italic;">${item.content.body}</p>`; }
+                else if(item.type === 'affirmation') {
+                    icon = `✨ ${item.content.title} (Olumlama)`;
+                    contentHTML = '';
+                    if(item.content.text) contentHTML += `<p><strong>Niyet:</strong> ${item.content.text}</p>`;
+                    if(item.content.number) contentHTML += `<p style="margin-top:5px; color:var(--primary); font-weight:bold;">Sayı Sekansı: ${item.content.number}</p>`;
+                }
+                else if(item.type === 'discovery') {
+                    icon = `🌱 ${item.content.title}`;
+                    contentHTML = item.content.answers.map(ans => `
+                        <div style="margin-bottom:15px; border-left:2px solid var(--secondary); padding-left:10px;">
+                            <strong style="font-size:0.9rem; color:#555;">${ans.q}</strong><br>
+                            <span style="color:var(--text-dark);">${ans.a}</span>
+                        </div>
+                    `).join('');
+                }
 
-                div.innerHTML = `
-                    <div class="archive-header"><span class="archive-title">${icon}</span><span>${item.date} <button class="delete-btn" onclick="deleteItem(${item.id})">🗑️</button></span></div>
-                    <div class="archive-body">${contentHTML}</div>
-                `;
+                div.innerHTML = `<div class="archive-header"><span class="archive-title">${icon}</span><span>${item.date} <button class="delete-btn" onclick="deleteItem(${item.id})">🗑️</button></span></div><div class="archive-body">${contentHTML}</div>`;
                 list.appendChild(div);
             });
         }
-
-        function deleteItem(id) {
-            if(confirm('Bu anıyı silmek istediğine emin misin?')) {
-                zazeData = zazeData.filter(i => i.id !== id);
-                localStorage.setItem('zazeura_data', JSON.stringify(zazeData));
-                renderArchive();
-            }
-        }
-
-        /* YEDEKLEME */
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(zazeData));
-            const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "zazeura_yedek.json");
-            document.body.appendChild(dl); dl.click(); dl.remove();
-        }
+        function deleteItem(id) { if(confirm('Bu anıyı silmek istediğine emin misin?')) { zazeData = zazeData.filter(i => i.id !== id); localStorage.setItem('zazeura_data', JSON.stringify(zazeData)); renderArchive(); } }
+        function exportData() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(zazeData)); const dl = document.createElement('a'); dl.setAttribute("href", dataStr); dl.setAttribute("download", "zazeura_yedek.json"); document.body.appendChild(dl); dl.click(); dl.remove(); }
         function importData(event) {
             const file = event.target.files[0]; if(!file) return;
             const reader = new FileReader();
             reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if(Array.isArray(imported)) { zazeData = imported; localStorage.setItem('zazeura_data', JSON.stringify(zazeData)); renderArchive(); alert("Yedek yüklendi."); }
-                    else alert("Geçersiz format.");
-                } catch(err) { alert("Dosya okunamadı."); }
-            };
-            reader.readAsText(file);
+                try { const imported = JSON.parse(e.target.result); if(Array.isArray(imported)) { zazeData = imported; localStorage.setItem('zazeura_data', JSON.stringify(zazeData)); renderArchive(); alert("Yedek yüklendi."); } else alert("Geçersiz format."); } catch(err) { alert("Dosya okunamadı."); }
+            }; reader.readAsText(file);
         }
     </script>
 </body>
