@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zazeura Ekosistemi</title>
+    <style>
+        /* GENEL TASARIM VE RENKLER */
+        :root {
+            --bg-color: #FDFBF7; /* Krem/Kemik arka plan */
+            --primary: #A3B18A; /* Sakin yeşil */
+            --primary-light: #D4DFB8;
+            --secondary: #E9D8A6; /* Yumuşak sarı */
+            --text-dark: #4A4A4A;
+            --text-light: #7A7A7A;
+            --akrep-bg: #2B2D2B; /* Derin ama estetik koyu */
+            --akrep-text: #E8E8E8;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --card-bg: #FFFFFF;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --transition: all 0.4s ease;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* AKREP ODASI İÇİN TEMA DEĞİŞİMİ */
+        body.akrep-mode {
+            background-color: var(--akrep-bg);
+            color: var(--akrep-text);
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            color: var(--primary);
+        }
+        
+        body.akrep-mode h1 { color: #A0A0A0; }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 30px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+            display: none;
+            transition: var(--transition);
+        }
+        .back-btn:hover { transform: translateX(-5px); }
+        body.akrep-mode .back-btn { color: var(--akrep-text); }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* MODÜLLERİN GİZLENİP GÖSTERİLMESİ */
+        .view { display: none; animation: fadeIn 0.5s ease forwards; }
+        .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ANA SAYFA KARTLARI */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.02);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .card.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            border: 1px dashed #CCC;
+        }
+
+        .card-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .card-title { font-weight: 500; font-size: 1.1rem; }
+
+        /* BUTONLAR VE İNPUTLAR */
+        button.action-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+        button.action-btn:hover { background-color: #8c9a76; }
+        
+        textarea, input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #E0E0E0;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            background: transparent;
+            transition: var(--transition);
+        }
+        textarea:focus, input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.5);
+        }
+        body.akrep-mode textarea {
+            color: var(--akrep-text);
+            border-color: #444;
+        }
+
+        /* 1. GURUR ÇİÇEĞİ */
+        .flower-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .canvas-wrapper {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            margin: 10px 0;
+            overflow: hidden;
+            border: 2px solid var(--secondary);
+        }
+        canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+        .tools { display: flex; gap: 10px; margin-bottom: 15px; }
+        .color-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor: pointer; }
+        .petals {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .petal-input {
+            background-color: var(--secondary);
+            opacity: 0.8;
+            border: none;
+            border-radius: 15px 50px 15px 50px; /* Yaprak efekti */
+            padding: 15px;
+            resize: none;
+            height: 60px;
+            text-align: center;
+        }
+
+        /* 2. ŞÜKRAN KAVANOZU */
+        .jar-container { text-align: center; position: relative; padding: 2rem 0; }
+        .jar-icon { font-size: 5rem; margin-bottom: 1rem; transition: transform 0.3s; }
+        .jar-options { display: flex; justify-content: center; gap: 15px; margin-bottom: 1rem; }
+        .opt-btn { font-size: 1.5rem; background: var(--card-bg); border: 1px solid #ddd; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; }
+        .opt-btn.selected { border-color: var(--primary); box-shadow: 0 0 10px var(--primary-light); }
+        .flying-item {
+            position: absolute;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            transition: all 1s ease-in-out;
+        }
+
+        /* 3. KENDİME MEKTUP */
+        .letter-container {
+            background-image: repeating-linear-gradient(transparent, transparent 29px, #E9D8A6 30px);
+            background-color: #FFFDF8;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid #eee;
+            position: relative;
+        }
+        .letter-container select, .letter-container input, .letter-container textarea {
+            border: none;
+            background: transparent;
+            border-bottom: 1px dashed #ccc;
+            border-radius: 0;
+            margin-bottom: 1.5rem;
+        }
+        .letter-container textarea {
+            line-height: 30px;
+            height: 200px;
+            resize: vertical;
+            border: none;
+        }
+        .envelope-anim {
+            animation: foldEnvelope 1.5s forwards;
+        }
+        @keyframes foldEnvelope {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(0.8) rotateX(45deg); opacity: 0.8; }
+            100% { transform: scale(0.1) rotateX(90deg); opacity: 0; }
+        }
+
+        /* 4. AKREP ODASI */
+        .akrep-container {
+            text-align: center;
+        }
+        .akrep-textarea {
+            height: 300px;
+            background: rgba(0,0,0,0.2);
+            color: #ddd;
+            border: 1px solid #555;
+            resize: none;
+        }
+        .dissolve-anim {
+            animation: dissolve 2s forwards;
+        }
+        @keyframes dissolve {
+            0% { opacity: 1; filter: blur(0); transform: scale(1); }
+            100% { opacity: 0; filter: blur(10px); transform: scale(1.1) translateY(-20px); }
+        }
+
+        /* 5. DÜŞÜNCE KASASI & BALON */
+        .safe-balloon-container {
+            text-align: center;
+            min-height: 400px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .safe-stage, .balloon-stage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        .icon-huge { font-size: 5rem; margin: 1rem 0; }
+        .balloon {
+            font-size: 6rem;
+            position: relative;
+            animation: floatUp 3s ease-in forwards;
+        }
+        .balloon-text {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            width: 80%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .pop-text {
+            font-size: 2.5rem;
+            color: var(--primary);
+            font-weight: 300;
+            letter-spacing: 5px;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 1s ease;
+            position: absolute;
+        }
+        .pop-text.show { opacity: 1; transform: scale(1); }
+        @keyframes floatUp {
+            0% { transform: translateY(50px); opacity: 1; }
+            90% { transform: translateY(-150px); opacity: 1; }
+            100% { transform: translateY(-150px) scale(0); opacity: 0; } /* Patlama */
+        }
+        @keyframes lockSafe {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        /* 6. KİŞİSEL ARŞİV */
+        .archive-controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 2rem; }
+        .archive-controls button { background-color: var(--card-bg); border: 1px solid var(--primary); color: var(--primary); border-radius: 8px; padding: 8px 15px; cursor: pointer; }
+        .archive-item {
+            background: var(--card-bg);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+            box-shadow: var(--shadow);
+        }
+        .archive-header { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-light); margin-bottom: 8px; }
+        .archive-title { font-weight: bold; color: var(--text-dark); }
+        .archive-body { font-size: 0.95rem; white-space: pre-wrap; }
+        .delete-btn { color: #d9534f; cursor: pointer; background: none; border: none; font-size: 0.9rem; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="back-btn" id="backBtn" onclick="navigate('home')">←</button>
+        <h1 id="mainTitle">Zazeura</h1>
+        <div class="subtitle" id="mainSubtitle">Kendi içine döndüğün güvenli alan</div>
+    </header>
+
+    <main>
+        <!-- ANA SAYFA -->
+        <section id="home" class="view active">
+            <div class="grid-container">
+                <div class="card" onclick="navigate('flower')">
+                    <div class="card-icon">🌸</div>
+                    <div class="card-title">Gurur Çiçeği</div>
+                </div>
+                <div class="card" onclick="navigate('jar')">
+                    <div class="card-icon">🍯</div>
+                    <div class="card-title">Şükran Kavanozu</div>
+                </div>
+                <div class="card" onclick="navigate('letter')">
+                    <div class="card-icon">💌</div>
+                    <div class="card-title">Kendime Mektup</div>
+                </div>
+                <div class="card" onclick="navigate('akrep')">
+                    <div class="card-icon" style="filter: grayscale(100%);">🦂</div>
+                    <div class="card-title">Akrep Odası</div>
+                </div>
+                <div class="card" onclick="navigate('safe')">
+                    <div class="card-icon">🎈</div>
+                    <div class="card-title">Düşünce Kasası</div>
+                </div>
+                <div class="card" onclick="navigate('archive')">
+                    <div class="card-icon">🗂️</div>
+                    <div class="card-title">Kişisel Arşiv</div>
+                </div>
+                <div class="card disabled">
+                    <div class="card-icon">✨</div>
+                    <div class="card-title">Zaze'nin Işığı<br><small>(Yakında)</small></div>
+                </div>
+                <div class="card disabled">
+                    <div class="card-icon">🌱</div>
+                    <div class="card-title">Kendimi Tanıyorum<br><small>(Yakında)</small></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. GURUR ÇİÇEĞİ -->
+        <section id="flower" class="view">
+            <div class="flower-container">
+                <p style="text-align:center; color:var(--text-light);">Bugün kendinle ilgili gurur duyduğun 5 şeyi yapraklara yaz. Ortayı dilediğin gibi renklendir.</p>
+                
+                <div class="tools">
+                    <div class="color-btn" style="background:#A3B18A;" onclick="changeColor('#A3B18A')"></div>
+                    <div class="color-btn" style="background:#E9D8A6;" onclick="changeColor('#E9D8A6')"></div>
+                    <div class="color-btn" style="background:#F4A261;" onclick="changeColor('#F4A261')"></div>
+                    <div class="color-btn" style="background:#E76F51;" onclick="changeColor('#E76F51')"></div>
+                    <div class="color-btn" style="background:#4A4A4A;" onclick="changeColor('#4A4A4A')"></div>
+                    <button onclick="clearCanvas()" style="border:none; background:none; cursor:pointer; font-size:1.2rem;">🗑️</button>
+                </div>
+
+                <div class="canvas-wrapper">
+                    <canvas id="doodleCanvas" width="200" height="200"></canvas>
+                </div>
+
+                <div class="petals">
+                    <textarea class="petal-input" placeholder="1. Gurur duyuyorum çünkü..."></textarea>
+                    <textarea class="petal-input" placeholder="2. Gurur duyuyorum çünkü..."></textarea>
+                    <textarea class="petal-input" placeholder="3. Gurur duyuyorum çünkü..."></textarea>
+                    <textarea class="petal-input" placeholder="4. Gurur duyuyorum çünkü..."></textarea>
+                    <textarea class="petal-input" placeholder="5. Gurur duyuyorum çünkü..."></textarea>
+                </div>
+                <button class="action-btn" onclick="saveFlower()">Çiçeğimi Arşive Ekle</button>
+            </div>
+        </section>
+
+        <!-- 2. ŞÜKRAN KAVANOZU -->
+        <section id="jar" class="view">
+            <div class="jar-container">
+                <div class="jar-icon" id="jarIcon">🍯</div>
+                <p style="color:var(--text-light); margin-bottom:15px;">Bugün neye minnettarsın veya hoşuna giden küçük şey neydi?</p>
+                
+                <div class="jar-options" id="jarOptions">
+                    <button class="opt-btn selected" onclick="selectJarItem(this, '⭐')">⭐</button>
+                    <button class="opt-btn" onclick="selectJarItem(this, '🌸')">🌸</button>
+                    <button class="opt-btn" onclick="selectJarItem(this, '📜')">📜</button>
+                    <button class="opt-btn" onclick="selectJarItem(this, '🎲')" title="Rastgele">🎲</button>
+                </div>
+                
+                <input type="text" id="jarInput" placeholder="Minnettarım..." maxlength="100">
+                <button class="action-btn" onclick="addToJar()">Kavanoza Ekle</button>
+                
+                <!-- Animasyon için uçan obje -->
+                <div id="flyingItem" class="flying-item">⭐</div>
+            </div>
+        </section>
+
+        <!-- 3. KENDİME MEKTUP -->
+        <section id="letter" class="view">
+            <div class="letter-container" id="letterContainer">
+                <select id="letterTo">
+                    <option value="Geçmişteki Kendime">Geçmişteki Kendime</option>
+                    <option value="Şimdiki Kendime" selected>Şimdiki Kendime</option>
+                    <option value="Gelecekteki Kendime">Gelecekteki Kendime</option>
+                </select>
+                <input type="text" id="letterTitle" placeholder="Mektubun başlığı...">
+                <textarea id="letterBody" placeholder="Sevgili kendim..."></textarea>
+                <div style="text-align: right;">
+                    <button class="action-btn" onclick="saveLetter()">Mektubu Katla ve Sakla</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. AKREP ODASI -->
+        <section id="akrep" class="view">
+            <div class="akrep-container">
+                <p style="color:var(--akrep-text); margin-bottom:15px; opacity:0.8;">Burası derinlerin. Filtresiz, sansürsüz içinden geçenleri yaz. Gönderdiğinde hepsi boşluğa karışacak, hiçbir şey kaydedilmeyecek.</p>
+                <textarea id="akrepText" class="akrep-textarea" placeholder="Şu an içimden geçenler..."></textarea>
+                <button class="action-btn" style="background:#555; width:100%;" onclick="releaseAkrep()">Karanlığa Bırak ve Arın</button>
+            </div>
+        </section>
+
+        <!-- 5. DÜŞÜNCE KASASI & BALON -->
+        <section id="safe" class="view">
+            <div class="safe-balloon-container">
+                
+                <!-- Aşama 1: Kasa -->
+                <div id="safeStage" class="safe-stage">
+                    <div class="icon-huge" id="safeIcon">🗄️</div>
+                    <p style="color:var(--text-light); margin-bottom:15px;">Zihnini yoran, kendine dair verdiğin olumsuz bir hükmü yaz.</p>
+                    <textarea id="safeInput" style="height:100px; text-align:center;" placeholder="Örn: Başarısızım, yetersizim, yapamıyorum..."></textarea>
+                    <button class="action-btn" onclick="lockSafe()">Düşünceyi Kasaya Kilitle</button>
+                </div>
+
+                <!-- Aşama 2: Balon -->
+                <div id="balloonStage" class="balloon-stage" style="display:none;">
+                    <div class="balloon" id="theBalloon">
+                        🎈
+                        <div class="balloon-text" id="balloonTextLabel"></div>
+                    </div>
+                </div>
+
+                <!-- Aşama 3: Sonuç -->
+                <div class="pop-text" id="popText">ÖĞRENİYORUM</div>
+
+            </div>
+        </section>
+
+        <!-- 6. KİŞİSEL ARŞİV -->
+        <section id="archive" class="view">
+            <div class="archive-controls">
+                <button onclick="exportData()">💾 Yedeği İndir</button>
+                <button onclick="document.getElementById('importFile').click()">📂 Yedek Yükle</button>
+                <input type="file" id="importFile" style="display:none" accept=".json" onchange="importData(event)">
+            </div>
+            <div id="archiveList">
+                <!-- Arşiv öğeleri buraya JS ile gelecek -->
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        /* YARDIMCI FONKSİYONLAR VE SES */
+        function playChime() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.05, ctx.currentTime); // Çok kısık ses
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.5);
+            } catch(e) { console.log("Ses çalınamadı."); }
+        }
+
+        /* SAYFA NAVİGASYONU */
+        const views = document.querySelectorAll('.view');
+        const backBtn = document.getElementById('backBtn');
+        const mainTitle = document.getElementById('mainTitle');
+        const mainSubtitle = document.getElementById('mainSubtitle');
+
+        const titles = {
+            'home': { title: 'Zazeura', sub: 'Kendi içine döndüğün güvenli alan' },
+            'flower': { title: 'Gurur Çiçeği', sub: 'Kendini takdir et' },
+            'jar': { title: 'Şükran Kavanozu', sub: 'Küçük mutlulukları biriktir' },
+            'letter': { title: 'Kendime Mektup', sub: 'Zamanın ötesine seslen' },
+            'akrep': { title: 'Akrep Odası', sub: 'Sansürsüz ve geçici' },
+            'safe': { title: 'Düşünce Kasası', sub: 'Hükümleri serbest bırak' },
+            'archive': { title: 'Kişisel Arşiv', sub: 'Geçmişteki sen' }
+        };
+
+        function navigate(viewId) {
+            views.forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            
+            backBtn.style.display = viewId === 'home' ? 'none' : 'block';
+            mainTitle.innerText = titles[viewId].title;
+            mainSubtitle.innerText = titles[viewId].sub;
+
+            if(viewId === 'akrep') {
+                document.body.classList.add('akrep-mode');
+            } else {
+                document.body.classList.remove('akrep-mode');
+            }
+
+            if(viewId === 'archive') {
+                renderArchive();
+            }
+        }
+
+        /* VERİ YÖNETİMİ (LOCAL STORAGE) */
+        let zazeData = JSON.parse(localStorage.getItem('zazeura_data')) || [];
+
+        function saveData(type, content) {
+            const newItem = {
+                id: Date.now(),
+                date: new Date().toLocaleDateString('tr-TR', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' }),
+                type: type,
+                content: content
+            };
+            zazeData.unshift(newItem); // En başa ekle
+            localStorage.setItem('zazeura_data', JSON.stringify(zazeData));
+        }
+
+        /* 1. GURUR ÇİÇEĞİ CANVAS İŞLEMLERİ */
+        const canvas = document.getElementById('doodleCanvas');
+        const ctx = canvas.getContext('2d');
+        let painting = false;
+        let brushColor = '#A3B18A';
+
+        function startPosition(e) { painting = true; draw(e); }
+        function endPosition() { painting = false; ctx.beginPath(); }
+        function draw(e) {
+            if (!painting) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            let clientX = e.clientX || e.touches[0].clientX;
+            let clientY = e.clientY || e.touches[0].clientY;
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = brushColor;
+            ctx.lineTo(clientX - rect.left, clientY - rect.top);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(clientX - rect.left, clientY - rect.top);
+        }
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', endPosition);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchstart', startPosition, {passive:false});
+        canvas.addEventListener('touchend', endPosition);
+        canvas.addEventListener('touchmove', draw, {passive:false});
+
+        function changeColor(color) { brushColor = color; }
+        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        function saveFlower() {
+            const inputs = document.querySelectorAll('.petal-input');
+            let petals = [];
+            inputs.forEach(inp => { if(inp.value.trim() !== '') petals.push(inp.value.trim()); });
+            
+            if(petals.length === 0) {
+                alert("Lütfen en az bir yaprağı doldur."); return;
+            }
+            
+            // Canvas verisini al (küçük boyutlu base64)
+            const canvasData = canvas.toDataURL();
+
+            saveData('flower', { petals: petals, doodle: canvasData });
+            alert("Gurur Çiçeğin arşive kaydedildi!");
+            
+            inputs.forEach(inp => inp.value = '');
+            clearCanvas();
+            navigate('home');
+        }
+
+        /* 2. ŞÜKRAN KAVANOZU */
+        let selectedJarItem = '⭐';
+        function selectJarItem(btn, item) {
+            document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            if(item === '🎲') {
+                const arr = ['⭐', '🌸', '📜'];
+                selectedJarItem = arr[Math.floor(Math.random() * arr.length)];
+            } else {
+                selectedJarItem = item;
+            }
+        }
+
+        function addToJar() {
+            const input = document.getElementById('jarInput');
+            const text = input.value.trim();
+            if(!text) return;
+
+            const flying = document.getElementById('flyingItem');
+            const jarIcon = document.getElementById('jarIcon');
+            
+            // Başlangıç pozisyonu (input'un üstü)
+            flying.innerText = selectedJarItem;
+            flying.style.transition = 'none';
+            flying.style.opacity = '1';
+            flying.style.top = '250px';
+            flying.style.left = '50%';
+            flying.style.transform = 'translateX(-50%) scale(1)';
+
+            // Kısa gecikme ile uçur
+            setTimeout(() => {
+                flying.style.transition = 'all 0.8s ease-in-out';
+                flying.style.top = jarIcon.offsetTop + 'px';
+                flying.style.transform = 'translateX(-50%) scale(0.2)';
+                playChime();
+            }, 50);
+
+            // Animasyon bitişi
+            setTimeout(() => {
+                flying.style.opacity = '0';
+                saveData('jar', { text: text, icon: selectedJarItem });
+                input.value = '';
+                alert("Kavanoza eklendi!");
+            }, 850);
+        }
+
+        /* 3. KENDİME MEKTUP */
+        function saveLetter() {
+            const to = document.getElementById('letterTo').value;
+            const title = document.getElementById('letterTitle').value.trim();
+            const body = document.getElementById('letterBody').value.trim();
+
+            if(!body) { alert("Mektup içeriği boş olamaz."); return; }
+
+            const container = document.getElementById('letterContainer');
+            container.classList.add('envelope-anim');
+
+            setTimeout(() => {
+                saveData('letter', { to: to, title: title, body: body });
+                container.classList.remove('envelope-anim');
+                document.getElementById('letterTitle').value = '';
+                document.getElementById('letterBody').value = '';
+                alert("Mektubun güvenle saklandı.");
+                navigate('home');
+            }, 1500);
+        }
+
+        /* 4. AKREP ODASI */
+        function releaseAkrep() {
+            const textEl = document.getElementById('akrepText');
+            if(!textEl.value.trim()) return;
+
+            textEl.classList.add('dissolve-anim');
+            setTimeout(() => {
+                textEl.value = '';
+                textEl.classList.remove('dissolve-anim');
+            }, 2000);
+        }
+
+        /* 5. DÜŞÜNCE KASASI & BALON */
+        function lockSafe() {
+            const input = document.getElementById('safeInput');
+            const text = input.value.trim();
+            if(!text) return;
+
+            const safeStage = document.getElementById('safeStage');
+            const safeIcon = document.getElementById('safeIcon');
+            const balloonStage = document.getElementById('balloonStage');
+            const popText = document.getElementById('popText');
+            const balloonTextLabel = document.getElementById('balloonTextLabel');
+            const balloon = document.getElementById('theBalloon');
+
+            // 1. Kasa kilitlenme animasyonu
+            safeIcon.style.animation = 'lockSafe 1s forwards';
+            
+            setTimeout(() => {
+                safeStage.style.display = 'none';
+                safeIcon.style.animation = ''; // sıfırla
+                
+                // 2. Balon görünür ve uçar
+                balloonStage.style.display = 'flex';
+                balloonTextLabel.innerText = text;
+                balloon.style.animation = 'none'; // reset
+                void balloon.offsetWidth; // trigger reflow
+                balloon.style.animation = 'floatUp 3s ease-in forwards';
+
+                // 3. Patlama ve Öğreniyorum
+                setTimeout(() => {
+                    popText.classList.add('show');
+                    
+                    // 4. Her şeyi sıfırla
+                    setTimeout(() => {
+                        popText.classList.remove('show');
+                        balloonStage.style.display = 'none';
+                        safeStage.style.display = 'flex';
+                        input.value = '';
+                    }, 3000);
+
+                }, 2800); // Balon animasyonunun son anları
+                
+            }, 1000);
+        }
+
+        /* 6. KİŞİSEL ARŞİV */
+        function renderArchive() {
+            const list = document.getElementById('archiveList');
+            list.innerHTML = '';
+
+            if(zazeData.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#999;">Arşivin şu an boş. Kendine dair izler bırakmaya başla.</p>';
+                return;
+            }
+
+            zazeData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'archive-item';
+                
+                let icon = '';
+                let contentHTML = '';
+
+                if(item.type === 'flower') {
+                    icon = '🌸 Gurur Çiçeği';
+                    contentHTML = `<ul style="margin-left:20px; font-size:0.9rem;">${item.content.petals.map(p => `<li>${p}</li>`).join('')}</ul>`;
+                    if(item.content.doodle) {
+                        contentHTML += `<img src="${item.content.doodle}" style="width:100px; height:100px; border-radius:50%; margin-top:10px; border:1px solid #eee;">`;
+                    }
+                } 
+                else if(item.type === 'jar') {
+                    icon = `${item.content.icon} Şükran Kavanozu`;
+                    contentHTML = `<p>${item.content.text}</p>`;
+                }
+                else if(item.type === 'letter') {
+                    icon = `💌 ${item.content.to}`;
+                    contentHTML = `<strong>${item.content.title}</strong><br><p style="margin-top:5px; font-style:italic;">${item.content.body}</p>`;
+                }
+
+                div.innerHTML = `
+                    <div class="archive-header">
+                        <span class="archive-title">${icon}</span>
+                        <span>${item.date} <button class="delete-btn" onclick="deleteItem(${item.id})">🗑️</button></span>
+                    </div>
+                    <div class="archive-body">${contentHTML}</div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function deleteItem(id) {
+            if(confirm('Bu anıyı arşivden silmek istediğine emin misin?')) {
+                zazeData = zazeData.filter(i => i.id !== id);
+                localStorage.setItem('zazeura_data', JSON.stringify(zazeData));
+                renderArchive();
+            }
+        }
+
+        /* DIŞA AKTAR / İÇE AKTAR (YEDEKLEME) */
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(zazeData));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "zazeura_yedek.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    if(Array.isArray(importedData)) {
+                        zazeData = importedData;
+                        localStorage.setItem('zazeura_data', JSON.stringify(zazeData));
+                        renderArchive();
+                        alert("Yedek başarıyla yüklendi.");
+                    } else {
+                        alert("Geçersiz dosya formatı.");
+                    }
+                } catch(err) {
+                    alert("Dosya okunamadı.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+    </script>
+</body>
+</html>
